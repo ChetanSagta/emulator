@@ -1,17 +1,17 @@
 package nes.hardware;
 
 public enum AddressingMode{
-  Immediate,
-  ZeroPage,
-  IndexedZeroPageX,
-  IndexedZeroPageY,
   Absolute,
+  Accumulator,
+  Immediate,
+  Implied,
   IndexedAbsoluteX,
   IndexedAbsoluteY,
+  IndexedIndirect, //PreIndex
+  IndirectIndexed, //PostIndex
+  IndexedZeroPageX,
+  IndexedZeroPageY,
   Indirect,
-  Implied,
-  Accumulator,
   Relative,
-  IndexedIndirectX, //PreIndex
-  IndexedIndirectY, //PostIndex
+  ZeroPage,
 }

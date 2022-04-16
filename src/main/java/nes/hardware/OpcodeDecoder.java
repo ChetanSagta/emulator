@@ -30,7 +30,7 @@ public class OpcodeDecoder {
       case 0x03:
         // Unsupported Text
         tempInstuctionInfo.setHexCode("SLO");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectX);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirect);
         tempInstuctionInfo.setInstructionLength(2);
         tempInstuctionInfo.setMinCycle(8);
         break;
@@ -120,7 +120,7 @@ public class OpcodeDecoder {
         break;
       case 0x11:
         tempInstuctionInfo.setHexCode("ORA");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectY);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndirectIndexed);
         tempInstuctionInfo.setInstructionLength(2);
         // can be 5 or 6
         tempInstuctionInfo.setMinCycle(5);
@@ -135,7 +135,7 @@ public class OpcodeDecoder {
       case 0x13:
         // Unsupported Text
         tempInstuctionInfo.setHexCode("SLO");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectY);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndirectIndexed);
         tempInstuctionInfo.setInstructionLength(2);
         tempInstuctionInfo.setMinCycle(8);
         break;
@@ -161,7 +161,7 @@ public class OpcodeDecoder {
       case 0x17:
         // Unsupported Text
         tempInstuctionInfo.setHexCode("SLO");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectX);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirect);
         tempInstuctionInfo.setInstructionLength(2);
         tempInstuctionInfo.setMinCycle(6);
         break;
@@ -188,7 +188,7 @@ public class OpcodeDecoder {
       case 0x1B:
         // Unsupported Text
         tempInstuctionInfo.setHexCode("SLO");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectX);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirect);
         tempInstuctionInfo.setInstructionLength(3);
         tempInstuctionInfo.setMinCycle(7);
         break;
@@ -214,7 +214,7 @@ public class OpcodeDecoder {
       case 0x1F:
         // Unsupported Text
         tempInstuctionInfo.setHexCode("SLO");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectX);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirect);
         tempInstuctionInfo.setInstructionLength(3);
         tempInstuctionInfo.setMinCycle(6);
         break;
@@ -226,7 +226,7 @@ public class OpcodeDecoder {
         break;
       case 0x21:
         tempInstuctionInfo.setHexCode("AND");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectX);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirect);
         tempInstuctionInfo.setInstructionLength(2);
         tempInstuctionInfo.setMinCycle(6);
         break;
@@ -329,7 +329,7 @@ public class OpcodeDecoder {
         break;
       case 0x31:
         tempInstuctionInfo.setHexCode("AND");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectX);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirect);
         tempInstuctionInfo.setInstructionLength(2);
         // can be 5 or 6
         tempInstuctionInfo.setMinCycle(5);
@@ -435,7 +435,7 @@ public class OpcodeDecoder {
         break;
       case 0x41:
         tempInstuctionInfo.setHexCode("EOR");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectX);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirect);
         tempInstuctionInfo.setInstructionLength(2);
         tempInstuctionInfo.setMinCycle(6);
         break;
@@ -538,7 +538,7 @@ public class OpcodeDecoder {
         break;
       case 0x51:
         tempInstuctionInfo.setHexCode("EOR");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectY);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndirectIndexed);
         tempInstuctionInfo.setInstructionLength(2);
         tempInstuctionInfo.setMinCycle(5);
         break;
@@ -642,7 +642,7 @@ public class OpcodeDecoder {
         break;
       case 0x61:
         tempInstuctionInfo.setHexCode("ADC");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectX);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirect);
         tempInstuctionInfo.setInstructionLength(2);
         tempInstuctionInfo.setMinCycle(6);
         break;
@@ -656,7 +656,7 @@ public class OpcodeDecoder {
       case 0x63:
         // Unsupported Text
         tempInstuctionInfo.setHexCode("RRA");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectX);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirect);
         tempInstuctionInfo.setInstructionLength(2);
         tempInstuctionInfo.setMinCycle(8);
         break;
@@ -743,7 +743,7 @@ public class OpcodeDecoder {
         break;
       case 0x71:
         tempInstuctionInfo.setHexCode("ADC");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectY);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndirectIndexed);
         tempInstuctionInfo.setInstructionLength(2);
         tempInstuctionInfo.setMinCycle(6);
         break;
@@ -757,7 +757,7 @@ public class OpcodeDecoder {
       case 0x73:
         // Unsupported Text
         tempInstuctionInfo.setHexCode("RRA");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectY);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndirectIndexed);
         tempInstuctionInfo.setInstructionLength(2);
         tempInstuctionInfo.setMinCycle(8);
         break;
@@ -828,7 +828,7 @@ public class OpcodeDecoder {
         break;
       case 0x81:
         tempInstuctionInfo.setHexCode("STA");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectX);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirect);
         tempInstuctionInfo.setInstructionLength(2);
         tempInstuctionInfo.setMinCycle(6);
         break;
@@ -842,7 +842,7 @@ public class OpcodeDecoder {
       case 0x83:
         // Todo: Unsupported Text
         tempInstuctionInfo.setHexCode("SAX");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectX);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirect);
         tempInstuctionInfo.setInstructionLength(2);
         tempInstuctionInfo.setMinCycle(6);
         break;
@@ -931,7 +931,7 @@ public class OpcodeDecoder {
         break;
       case 0x91:
         tempInstuctionInfo.setHexCode("STA");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectY);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndirectIndexed);
         tempInstuctionInfo.setInstructionLength(2);
         tempInstuctionInfo.setMinCycle(6);
         break;
@@ -970,7 +970,7 @@ public class OpcodeDecoder {
       case 0x97:
         // Todo: Unsupported Text
         tempInstuctionInfo.setHexCode("SAX");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectX);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirect);
         tempInstuctionInfo.setInstructionLength(2);
         tempInstuctionInfo.setMinCycle(6);
         break;
@@ -1033,7 +1033,7 @@ public class OpcodeDecoder {
         break;
       case 0xA1:
         tempInstuctionInfo.setHexCode("LDA");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectX);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirect);
         tempInstuctionInfo.setInstructionLength(2);
         tempInstuctionInfo.setMinCycle(6);
         break;
@@ -1046,7 +1046,7 @@ public class OpcodeDecoder {
       case 0xA3:
         // Unsupported Text
         tempInstuctionInfo.setHexCode("LAX");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectX);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirect);
         tempInstuctionInfo.setInstructionLength(2);
         tempInstuctionInfo.setMinCycle(6);
         break;
@@ -1134,7 +1134,7 @@ public class OpcodeDecoder {
         break;
       case 0xB1:
         tempInstuctionInfo.setHexCode("LDA");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectX);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirect);
         tempInstuctionInfo.setInstructionLength(2);
         tempInstuctionInfo.setMinCycle(5);
         break;
@@ -1235,7 +1235,7 @@ public class OpcodeDecoder {
         break;
       case 0xC1:
         tempInstuctionInfo.setHexCode("CMP");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectX);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirect);
         tempInstuctionInfo.setInstructionLength(2);
         tempInstuctionInfo.setMinCycle(6);
         break;
@@ -1336,7 +1336,7 @@ public class OpcodeDecoder {
         break;
       case 0xD1:
         tempInstuctionInfo.setHexCode("CMP");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectY);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndirectIndexed);
         tempInstuctionInfo.setInstructionLength(2);
         tempInstuctionInfo.setMinCycle(5);
       case 0xD2:
@@ -1439,7 +1439,7 @@ public class OpcodeDecoder {
         break;
       case 0xE1:
         tempInstuctionInfo.setHexCode("SBC");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectX);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirect);
         tempInstuctionInfo.setInstructionLength(2);
         tempInstuctionInfo.setMinCycle(6);
         break;
@@ -1539,7 +1539,7 @@ public class OpcodeDecoder {
         break;
       case 0xF1:
         tempInstuctionInfo.setHexCode("SBC");
-        tempInstuctionInfo.setAddressingMode(AddressingMode.IndexedIndirectY);
+        tempInstuctionInfo.setAddressingMode(AddressingMode.IndirectIndexed);
         tempInstuctionInfo.setInstructionLength(2);
         tempInstuctionInfo.setMinCycle(5);
         break;

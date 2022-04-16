@@ -1,57 +1,156 @@
 package nes.hardware;
 
-import java.util.EnumSet;
-
 import lombok.Data;
+import nes.exceptions.InvalidMemoryRangeException;
+
+import java.util.EnumSet;
 
 @Data
 public class CPU {
 
-  /*
-   * $0000-$00FF first page in memory $0000-$07FF are mirrored three times at
-   * $0800-$1FFF. This means that, for example, any data written to $0000 will
-   * also be written to $0800, $1000 and $1800. The memory mapped I/O registers
-   * are located at $2000-$401F. Locations $2000-$2007 are mirrored every 8 bytes
-   * in the region $2008-$3FFF and the remaining registers follow this mirroring
-   * From $8000 onwards is the addresses allocated to cartridge PRG-ROM. Games
-   * with only one 16 KB bank of PRG-ROM will load it into both $8000 and $C000.
-   * This is to ensure that the vector table is located in the correct addresses.
-   * Games with two 16 KB PRG-ROM banks will load one into $8000 and the other
-   * into $C000.
-   */
-  /*
-    Zero Page - $0000-$00FF 
-   
-   */
-  byte[] ram = new byte[4*1024];
-  short addressBus;
+  byte[] addressSpace = new byte[4 * 1024];
   // program counter, stack pointer and status registers
-  short PC;
-  byte SP;
+  byte pc, sp;
   // accumator and index registers
-  byte A, X, Y;
+  byte a, x, y;
 
-  private enum Registers{
-    N, //Negative,
-    V, //Overflow 
-    U, //unused
-    B, //break
+  private enum Registers {
+    N, // Negative,
+    V, // Overflow
+    U, // unused
+    B, // break
     D, // DecimalMode
     I, // InterruptDisable
     Z, // Zero,
-    C, //Carry
+    C, // Carry
   }
 
   EnumSet<Registers> registers = EnumSet.allOf(Registers.class);
 
-  public void push(byte data){throw new UnsupportedOperationException("Push to stack not supported yet");}
-  public byte pop(){ throw new UnsupportedOperationException("Pop from stack not supported yet");}
+  public void push(byte data) {
+    throw new UnsupportedOperationException("Push to stack not supported yet");
+  }
+
+  public byte pop() {
+    throw new UnsupportedOperationException("Pop from stack not supported yet");
+  }
+
+  public byte readFromRam(int address) throws InvalidMemoryRangeException {
+    // range of Ram
+    if (address >= 0x0000 && address <= 0x1FFF) {
+      return addressSpace[address & 0x0800];
+    }
+    throw new InvalidMemoryRangeException();
+  }
+
+  public void writeToRam(int address, byte data) throws InvalidMemoryRangeException {
+    // range of Ram
+    if (address >= 0x0000 && address <= 0x1FFF) {
+      addressSpace[address & 0x0800] = data;
+    }
+    throw new InvalidMemoryRangeException();
+  }
+
+  private byte absolute() {
+    byte lowerByte = (byte) (pc + 1);
+    pc = (byte) (pc + 1);
+    byte upperByte = (byte) (pc + 1);
+    pc = (byte) (pc + 1);
+    short finalAddress = (short) (lowerByte * 0x100 + upperByte);
+    return addressSpace[finalAddress];
+  }
+
+  private byte accumulator() {
+    return a;
+  }
+
+  private byte immediate() {
+    byte value = addressSpace[pc + 1];
+    pc = (byte) (pc + 1);
+    return value;
+  }
+
+  private void implied() {
+    return;
+  }
+
+  private byte indexedAbsoluteX() {
+    byte lowerByte = (byte) (pc + 1);
+    pc = (byte) (pc + 1);
+    byte upperByte = (byte) (pc + 1);
+    pc = (byte) (pc + 1);
+    short finalAddress = (short) (lowerByte * 0x100 + upperByte);
+    return addressSpace[finalAddress + x];
+  }
+
+  private byte indexedAbsoluteY() {
+    byte lowerByte = (byte) (pc + 1);
+    pc = (byte) (pc + 1);
+    byte upperByte = (byte) (pc + 1);
+    pc = (byte) (pc + 1);
+    short finalAddress = (short) (lowerByte * 0x100 + upperByte);
+    return addressSpace[finalAddress + y];
+  }
+
+  private short indexedIndirectX() {
+
+    byte nextByte = (byte) (pc + 1);
+    byte targetAddress = (byte) ((nextByte + x) & 0xFF);
+    return addressSpace[targetAddress];
+  }
+
+  private short indexedIndirectY() {
+    byte nextByte = (byte) (pc + 1);
+    byte targetAddressLowerByte = addressSpace[nextByte];
+    byte targetAddressUpperByte = addressSpace[nextByte + 0x01];
+    targetAddressLowerByte = (byte) (targetAddressLowerByte + y);
+    return (short) ((targetAddressUpperByte << 8) | targetAddressLowerByte);
+  }
+
+  private byte indexedZeroPageX() throws InvalidMemoryRangeException {
+    byte nextByte = (byte) (pc + 0x0001);
+    if (nextByte >= 0x0000 && nextByte <= 0x00ff) {
+      pc = (byte) (pc + 1);
+      byte finalAddress = (byte) ((nextByte + x) & 0x00ff);
+      return addressSpace[finalAddress];
+    }
+    throw new InvalidMemoryRangeException();
+  }
+
+  private byte indexedZeroPageY() throws InvalidMemoryRangeException {
+    byte nextByte = (byte) (pc + 0x0001);
+    if (nextByte >= 0x0000 && nextByte <= 0x00ff) {
+      pc = (byte) (pc + 1);
+      byte finalAddress = (byte) ((nextByte + y) & 0x00ff);
+      return addressSpace[finalAddress];
+    }
+    throw new InvalidMemoryRangeException();
+  }
 
 
-  //Interrupts  
-  //Addressing Modes
-  //Instructions
-  //
+  private short indirect() {
+    byte lowerByte = (byte) (pc + 1);
+    pc = (byte) (pc + 1);
+    byte upperByte = (byte) (pc + 1);
+    pc = (byte) (pc + 1);
+    return (short) (lowerByte * 0x100 + upperByte);
+  }
 
+
+  private byte relative() {
+    byte address = addressSpace[pc + 1];
+    address = (byte) (address + pc);
+    pc++;
+    return addressSpace[address];
+  }
+
+  private byte zeroPage() throws InvalidMemoryRangeException {
+    byte nextByte = (byte) (pc + 0x0001);
+    if (nextByte >= 0x0 && nextByte <= 0xf) {
+      pc = (byte) (pc + 1);
+      return addressSpace[nextByte];
+    }
+    throw new InvalidMemoryRangeException();
+  }
 
 }

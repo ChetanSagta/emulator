@@ -1,13 +1,13 @@
 package nes.exceptions;
 
-public class InvalidOpcodeFound extends Exception{
+public class InvalidOpcodeFound extends Exception {
 
-  public InvalidOpcodeFound(){
+  public InvalidOpcodeFound() {
     super();
   }
 
-  public InvalidOpcodeFound(String message){
-  super(message);
-}
+  public InvalidOpcodeFound(String message) {
+    super(message);
+  }
 
 }
