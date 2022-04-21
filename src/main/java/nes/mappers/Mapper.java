@@ -1,4 +1,4 @@
-package nes.hardware;
+package nes.mappers;
 
 public interface Mapper{
 

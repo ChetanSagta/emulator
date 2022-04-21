@@ -3,6 +3,8 @@ package nes;
 import lombok.extern.slf4j.Slf4j;
 import nes.hardware.Cartridge;
 
+import java.net.URI;
+
 @Slf4j
 public class Emulator {
 
@@ -11,9 +13,8 @@ public class Emulator {
 
   public void powerUp() {
 
-    if(catridge == null){
+    if(catridge == null) {
       log.info("Insert a catridge");
-      
     }
 
   }
@@ -37,7 +38,7 @@ public class Emulator {
   public void disconnectDisplay() {
   }
 
-  public void insertCatridge(String fileName) {
+  public void insertCatridge(URI fileName) {
 
     log.info("Starting catridge");
     catridge = new Cartridge(fileName);
