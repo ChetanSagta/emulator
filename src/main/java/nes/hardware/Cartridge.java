@@ -1,7 +1,7 @@
 package nes.hardware;
 
 import lombok.Data;
-import nes.mappers.Mapper;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -10,17 +10,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+@Slf4j
 public class Cartridge {
 
   byte[] trainer = new byte[512];
   byte[] fileContents;
   byte[] prgRom;
   byte[] chrRom;
-  byte[] playChoice;
-  Mapper mapper;
+  byte[] playChoiceInstRom;
+  byte[] playChoiceProm;
+
+  final CartridgeHeader header = new CartridgeHeader();
 
   @Data
-  private static class CatridgeHeader implements Serializable {
+  private static class CartridgeHeader implements Serializable {
 
     private byte n = 0x4E;
     private byte e = 0x45;
@@ -34,6 +37,10 @@ public class Cartridge {
     private byte flag9;
     private byte flag10;
     private byte[] padding = new byte[5];
+
+
+    private CartridgeHeader() {
+    }
 
     void bytesToHeader(final byte[] values) {
       n = values[0];
@@ -55,7 +62,7 @@ public class Cartridge {
     // 0: horizontal (vertical arrangement) (CIRAM A10 = PPU A11)
     // 1: vertical (horizontal arrangement) (CIRAM A10 =PPU A10)
     private byte getMirroring() {
-      return (byte) ((flag6 >> 0) & 1);
+      return (byte) ((flag6) & 1);
     }
 
     // 0:No
@@ -98,12 +105,16 @@ public class Cartridge {
 
     // Upper nybble of mapper number
     private byte upperNybble() {
-      return (byte) ((flag7 >> 4 )& 0b00001111);
+      return (byte) ((flag7 >> 4) & 0b00001111);
     }
 
-    private byte getPrgRamSize() { return flag8; }
+    private byte getPrgRamSize() {
+      return flag8;
+    }
 
-    private byte tvSystemflag9(){ return (byte)((flag9 >> 1) & 1);}
+    private byte tvSystemflag9() {
+      return (byte) ((flag9 >> 1) & 1);
+    }
 
     //76543210
     //  ||  ||
@@ -113,7 +124,7 @@ public class Cartridge {
 
     // TV system (0: NTSC; 1: PAL)
     private String tvSystemflag10() {
-      switch (flag10 >> 2 & 0b11){
+      switch (flag10 >> 2 & 0b11) {
         case 0b00:
           return "NTSC";
         case 0b10:
@@ -123,38 +134,86 @@ public class Cartridge {
       }
     }
 
-    private byte prgRamPresent(){ return (byte)(flag10 >> 4 & 0b1);}
+    private byte prgRamPresent() {
+      return (byte) (flag10 >> 4 & 0b1);
+    }
+
+    private boolean busConflict() {
+      return (flag10 >> 5 & 0x01) == 0x01;
+    }
 
     //flags 10 This byte is not part of the official specification, and relatively few emulators honor it.
 
   }
 
-  private void setTrainer() {
-    System.arraycopy(fileContents, 16, trainer, 1, 512);
-  }
-
   public Cartridge(final URI fileName) {
 
+    int totalSize = 0;
     final Path path = Paths.get(fileName);
     try {
       fileContents = Files.readAllBytes(path);
-      final CatridgeHeader header = new CatridgeHeader();
+
       final byte[] headerBytes = new byte[16];
-      for (int i = 0; i < 16; i++) {
-        headerBytes[i] = fileContents[i];
+      int currentHead = 0;
+      while (currentHead < 16) {
+        headerBytes[currentHead] = fileContents[currentHead];
+        currentHead++;
       }
       header.bytesToHeader(headerBytes);
+      totalSize += headerBytes.length;
 
-      System.out.println(header);
-      if (header.getTrainer() == 0x01) setTrainer();
+      log.info("Header : {}", header);
+      if (header.getTrainer() == 0x01) {
+        for (int i = 0; i < 512; i++) {
+          trainer[i] = fileContents[currentHead + i];
+          currentHead++;
+        }
+        totalSize += 512;
+      }
       prgRom = new byte[16384 * header.getPrgRomSize()];
+      for (int i = 0; i < 16384 * header.getPrgRomSize(); i++) {
+        prgRom[i] = fileContents[currentHead + i];
+        currentHead++;
+      }
+      totalSize += 16384 * header.getPrgRomSize();
       chrRom = new byte[8192 * header.getChrRomSize()];
-      if (header.playChoice() == 0x01) playChoice = new byte[8192];
-
+      for (int i = 0; i < 8192 * header.getChrRomSize(); i++) {
+        chrRom[i] = fileContents[currentHead + i];
+        currentHead++;
+      }
+      totalSize += 8192 * header.getChrRomSize();
+      if (header.playChoice() == 0x01) {
+        playChoiceInstRom = new byte[8192];
+        for (int i = 0; i < 8192; i++) {
+          playChoiceInstRom[i] = fileContents[currentHead + i];
+          currentHead++;
+        }
+        playChoiceProm = new byte[32];
+        for (int i = 0; i < 32; i++) {
+          playChoiceProm[i] = fileContents[currentHead + i];
+          currentHead++;
+        }
+        totalSize = 8192 + 32;
+      }
+      log.info("Total Size: {}", totalSize);
 
     } catch (final IOException io) {
       io.printStackTrace();
     }
 
   }
+
+  public int chrRomLength() {
+    return chrRom.length;
+  }
+
+  public int prgRomLength() {
+    return prgRom.length;
+  }
+
+  public int mapperUsed() {
+    return (header.upperNybble() & 0xFF00) | (header.lowerMapperNybble() & 0x00FF);
+  }
+
+
 }

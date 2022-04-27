@@ -1,14 +1,38 @@
 package nes.mappers;
 
+import nes.hardware.Cartridge;
+
 import java.util.ArrayList;
 
 //https://www.nesdev.org/wiki/NROM
-public class Mapper000 implements Mapper{
-  //16K or 32K
-  ArrayList<Byte> prgRom = new ArrayList<>();
-  //2K or 4K in Family Basic only
-  ArrayList<Byte> prgRam = new ArrayList<>();
-  ArrayList<Byte> chrRom = new ArrayList<>();
-  int chrCapacity = 8*1024;
+public class Mapper000 extends Mapper{
+
+  Cartridge cartridge;
+
+  @Override
+  public void writeToPrg(short address, byte data) {
+
+  }
+
+  @Override
+  public Byte readFromPrg(short address) {
+    return null;
+  }
+
+  @Override
+  public void writeToChr(short address, byte data) {
+
+  }
+
+  @Override
+  public Byte readFromChr(short address) {
+    return null;
+  }
+
+  Mapper000(ArrayList<Byte> prgRom, ArrayList<Byte> chrRom){
+    super(prgRom, chrRom);
+    this.prgRom = prgRom;
+    this.chrRom = chrRom;
+  }
 
 }
